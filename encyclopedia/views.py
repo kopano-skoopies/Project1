@@ -1,4 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render, HttpResponse, redirect
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 
 from . import util
 
@@ -17,3 +19,15 @@ def entry(request, title):
             "title": title,
             "Entry": Entry
         })
+    
+def search(request):
+    entries = util.list_entries()
+    if request.method == "POST":
+        encyclopedia_entry = request.POST.get('q')
+        if encyclopedia_entry  in entries:
+            return redirect('entry', title=encyclopedia_entry)
+        else:
+            for i in entries[0:]:     
+                if encyclopedia_entry in i:
+                    return HttpResponse(f"{encyclopedia_entry} was not found, did you mean {i}?")
+    return render(request, "encyclopedia/index.html")
