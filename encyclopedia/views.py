@@ -29,5 +29,9 @@ def search(request):
         else:
             for i in entries[0:]:     
                 if encyclopedia_entry in i:
-                    return HttpResponse(f"{encyclopedia_entry} was not found, did you mean {i}?")
+                    #return HttpResponse(f"{encyclopedia_entry} was not found, did you mean {i}?")
+                    return render(request, "encyclopedia/search.html", {
+                    "title": encyclopedia_entry,
+                    "Entry": i
+        })
     return render(request, "encyclopedia/index.html")
