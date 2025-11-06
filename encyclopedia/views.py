@@ -29,9 +29,23 @@ def search(request):
         else:
             for i in entries[0:]:     
                 if encyclopedia_entry in i:
-                    #return HttpResponse(f"{encyclopedia_entry} was not found, did you mean {i}?")
                     return render(request, "encyclopedia/search.html", {
                     "title": encyclopedia_entry,
                     "Entry": i
         })
     return render(request, "encyclopedia/index.html")
+
+def newPage(request):
+    entries = util.list_entries()
+    if request.method == "POST":
+        query = request.POST.get("title")
+        content = request.POST.get("content")
+        if query in entries:
+            return HttpResponse(f"error!!, this title '{query}' already exist")
+        else:
+            with open(f"entries/{query}.md", 'w') as page:
+                page.write(content)
+                page.close()
+                return redirect('entry', title=query)
+
+    return render(request, "encyclopedia/newpage.html")
