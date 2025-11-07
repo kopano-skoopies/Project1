@@ -47,5 +47,18 @@ def newPage(request):
                 page.write(content)
                 page.close()
                 return redirect('entry', title=query)
-
     return render(request, "encyclopedia/newpage.html")
+
+def editPage(request, title):
+    if request.method == "POST":
+        new_content = request.POST.get("content")
+        util.save_entry(title, new_content)
+        return redirect( "editPage", title=title)
+    content = util.get_entry(title)
+    if content:
+        return render(request, "encyclopedia/editPage.html", {
+            "title": title,
+            "content": content
+    })
+    else:
+        return HttpResponse("page not found")
