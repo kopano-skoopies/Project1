@@ -1,6 +1,5 @@
 from django.shortcuts import render, HttpResponse, redirect
-from django.http import HttpResponseRedirect
-from django.urls import reverse
+import random
 
 from . import util
 
@@ -62,3 +61,10 @@ def editPage(request, title):
     })
     else:
         return HttpResponse("page not found")
+
+def randomPage(request):
+    entries = util.list_entries()
+    random_entry = random.choice(entries)
+    return render(request, "encyclopedia/randompage.html", {
+        "Entry": random_entry
+    })
